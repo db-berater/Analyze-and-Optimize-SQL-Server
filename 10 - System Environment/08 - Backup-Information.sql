@@ -1,14 +1,16 @@
-/*============================================================================
+/*
+	============================================================================
 	File:		001 - A07 - System Environment - Backup-Information.sql
 
 	Summary:	This script returns for all databases the information about the
 				last taken backup.
 
-	Date:		May 2016
+	Date:		May 2024
 	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014 / 2016
-------------------------------------------------------------------------------
+	SQL Server Version: >= 2016
+
+	------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 
 	This script is intended only as a supplement to demos and lectures
@@ -18,7 +20,8 @@
 	ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED 
 	TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 	PARTICULAR PURPOSE.
-============================================================================*/
+	============================================================================
+*/
 USE master;
 GO
 

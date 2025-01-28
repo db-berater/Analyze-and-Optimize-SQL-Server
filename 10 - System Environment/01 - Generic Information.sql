@@ -1,13 +1,13 @@
 /*============================================================================
-	File:		001 - A00 - System Environment - Generic Information.sql
+	File:		01 - Generic Information.sql
 
 	Summary:	Ths script returns default system information about the sql server
 				you wish to check.
 
-	Date:		May 2016
+	Date:		May 2024
 	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014 /2016 / 2017 / 2019
+	SQL Server Version: >= 2016
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 

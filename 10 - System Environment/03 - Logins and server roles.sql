@@ -1,16 +1,15 @@
 /*============================================================================
-	File:		001 - A02 - System Environment - SQL Server Logins and server roles.sql
+	File:		03 - SQL Server Logins and server roles.sql
 
 	Summary:	Ths script returns the privileges of the system account
 				which will be used by the SQL Server Database Engine
 
 
-	Date:		November 2014
+	Date:		May 2024
+	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014 / 2016
+	SQL Server Version: >= 2016
 
-	Improvement:	Add columnn for deactivated users!
-					ORDER BY login_name
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 
@@ -49,7 +48,7 @@ FROM
 			'public'		AS	server_role,
 			sp.principal_Id
 	FROM	sys.server_principals AS SP
-	WHERE	type != 'R'
+	WHERE	type <> N'R'
 
 	UNION
 
@@ -69,7 +68,7 @@ FROM
 						ON	(SRM.role_principal_id = SR.principal_id)
 			) AS role_list ON
 			(SP.principal_id = role_list.member_principal_id)
-	WHERE	SP.type != 'R'
+	WHERE	SP.type != N'R'
 ) AS SecList
 PIVOT
 (

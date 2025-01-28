@@ -1,13 +1,15 @@
-/*============================================================================
-	File:		001 - A05 - System Environment - Page Life Expectancy.sql
+/*
+	============================================================================
+	File:		06 - Page Life Expectancy.sql
 
 	Summary:	This script gives you an overview of the current value of the
 				PLE
 
-	Date:		June 2015
+	Date:		May 2024
 	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014
+	SQL Server Version: >= 2016
+
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 

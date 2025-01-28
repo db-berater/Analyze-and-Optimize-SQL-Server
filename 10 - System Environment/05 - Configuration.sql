@@ -4,10 +4,11 @@
 	Summary:	Ths script returns the privileges of the system account
 				which will be used by the SQL Server Database Engine
 				
-	Date:		May 2015
+	Date:		May 2024
 	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014 / 2016 / 2017 / 2019
+	SQL Server Version: >= 2016
+
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 
