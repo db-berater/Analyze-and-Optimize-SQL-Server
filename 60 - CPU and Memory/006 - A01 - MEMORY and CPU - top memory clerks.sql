@@ -27,7 +27,7 @@
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 GO
 
-SELECT	TOP (10)
+SELECT	TOP (15)
 		mc.[type] AS [Memory Clerk Type],
 		CAST((SUM(mc.pages_kb) / 1024.0) AS DECIMAL(15, 2)) AS [Memory Usage (MB)]
 FROM	sys.dm_os_memory_clerks AS mc
