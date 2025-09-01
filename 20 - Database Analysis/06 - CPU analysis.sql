@@ -1,16 +1,13 @@
 /*============================================================================
-	File:		002 - A06 - Database analysis - CPU analysis.sql
+	File:		06 - CPU analysis.sql
 
-	Summary:	This script gives you an overview of all settings of 
-				your user databases.
+	Summary:	This script gives you an overview of all databases and their
+				related resource consumption CPU!
 
-				The basic script idea has been developed by Glen Berry
-				https://sqlserverperformance.wordpress.com/2014/09/17/sql-server-diagnostic-information-queries-for-september-2014/
-
-	Date:		February 2016
+	Date:		August 2025
 	Session:	Analysis of a Microsoft SQL Server
 
-	SQL Server Version: 2008 / 2012 / 2014 /2016 / 2017 / 2019
+	SQL Server Version: >= 2016
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 
@@ -28,34 +25,35 @@ GO
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 GO
 
-WITH DB_CPU_Stats
+WITH db_cpu_stats
 AS
 (
-	SELECT	DatabaseID,
-			DB_NAME(DatabaseID)		AS [Database Name],
-			SUM(total_worker_time)	AS [CPU_Time_Ms]
+	SELECT	f_db.database_id,
+			DB_NAME(f_db.database_id)	AS database_name,
+			SUM(qs.total_worker_time)	AS cpu_time_ms
 	FROM	sys.dm_exec_query_stats AS qs
 			CROSS APPLY
 			(
-				SELECT	CAST(value AS INT) AS [DatabaseID] 
+				SELECT	CAST(value AS INT) AS database_id
 				FROM	sys.dm_exec_plan_attributes(qs.plan_handle)
 				WHERE	attribute = N'dbid'
 			) AS F_DB
 	GROUP BY
-			DatabaseID
+			f_db.database_id
 )
-SELECT	ROW_NUMBER() OVER(ORDER BY [CPU_Time_Ms] DESC)	AS [CPU Rank],
-		[Database Name],
-		[CPU_Time_Ms], 
+SELECT	ROW_NUMBER() OVER(ORDER BY dcs.cpu_time_ms DESC)	AS cpu_rank,
+		dcs.database_name,
+		dcs.cpu_time_ms, 
 		CAST
 		(
-			[CPU_Time_Ms] * 1.0 / SUM([CPU_Time_Ms]) OVER() * 100.0
+			dcs.cpu_time_ms * 1.0 / SUM([CPU_Time_Ms]) OVER() * 100.0
 			AS DECIMAL(5, 2)
 		) AS [CPU Percent]
-FROM	DB_CPU_Stats
-WHERE	DatabaseID <> 32767 -- ResourceDB
+FROM	db_cpu_stats AS dcs
+WHERE	dcs.database_id <> 32767
 ORDER BY
-		[CPU Rank] OPTION (RECOMPILE);
+		cpu_rank
+OPTION (RECOMPILE);
 GO
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;

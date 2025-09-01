@@ -1,5 +1,5 @@
 /*============================================================================
-	File:		005 - A01 - Index usage in dedicated database.sql
+	File:		01 - Index usage in dedicated database.sql
 
 	Summary:	This script analyzes the current situation in the plan cache
 				of the connected SQL Server instance
@@ -8,7 +8,7 @@
 
 	Date:		November 2019
 
-	SQL Server Version: 2012 / 2014 / 2016 / 2017 / 2019
+	SQL Server Version: >= 2016
 ------------------------------------------------------------------------------
 	Written by Uwe Ricken, db Berater GmbH
 

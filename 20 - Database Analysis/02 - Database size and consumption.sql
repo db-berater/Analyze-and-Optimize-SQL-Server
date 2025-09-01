@@ -25,26 +25,19 @@ SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 GO
 
 -- define a table variable to store information about all databases
-DECLARE	@Result TABLE
+DECLARE	@result TABLE
 (
+	database_id			SMALLINT		NOT NULL,
 	database_name		sysname			NOT NULL,
-	database_owner		sysname			NULL,
-	is_trustworthy_on	BIT				NOT NULL,
-	compatibility_level	VARCHAR(10)		NOT NULL,
-	collation_Name		sysname			NOT NULL,
-	state_mode			VARCHAR(30)		NOT NULL,
-	recovery_mode		VARCHAR(30)		NOT NULL,
-	snapshot_isolation	VARCHAR(5)		NOT NULL	DEFAULT ('OFF'),
-	read_committed_SI	TINYINT			NOT NULL	DEFAULT (0),				
+	file_id				SMALLINT		NOT NULL,
 	logical_name		sysname			NOT NULL,
 	type_desc			VARCHAR(10)		NOT NULL,
 	physical_name		VARCHAR(255)	NOT NULL,
-	size_MB				DECIMAL(18, 2)	NULL		DEFAULT (0),
-	growth_MB			DECIMAL(18, 2)	NULL		DEFAULT (0),
-	used_MB				DECIMAL(18, 2)	NULL		DEFAULT (0),
-	max_size			DECIMAL(18, 2)	NULL		DEFAULT (0),
+	size_MB				DECIMAL(18)		NULL		DEFAULT (0),
+	growth_MB			DECIMAL(18)		NULL		DEFAULT (0),
+	used_MB				DECIMAL(18)		NULL		DEFAULT (0),
+	max_size			DECIMAL(18)		NULL		DEFAULT (0),
 	is_percent_growth	TINYINT			NULL		DEFAULT (0),
-	percent_growth		TINYINT			NULL		DEFAULT (0),
 	
 	PRIMARY KEY CLUSTERED
 	(
@@ -57,40 +50,44 @@ DECLARE	@Result TABLE
 
 INSERT INTO @Result
 EXEC	sys.sp_MSforeachdb @command1 = N'USE [?];
-SELECT	DB_NAME(D.database_id)							AS [Database Name],
-		SP.name											AS	[Database_Owner],
-		D.is_trustworthy_on								AS	[is_trustworthy_on],
-		D.compatibility_level,
-		D.collation_name,
-		D.state_desc,
-		D.recovery_model_desc,
-		D.snapshot_isolation_state_desc,
-		D.is_read_committed_snapshot_on,
-		MF.name,
-		MF.type_desc,
-		MF.physical_name,
-		MF.size / 128.0									AS	[size_MB],
-		CASE WHEN MF.[is_percent_growth] = 1
-			THEN MF.[size] * (MF.[growth] / 100.0)
-			ELSE MF.[growth]
+SELECT	d.database_id,
+		DB_NAME(d.database_id)							AS [Database Name],
+		mf.file_id,
+		mf.name,
+		mf.type_desc,
+		mf.physical_name,
+		mf.size / 128.0									AS	[size_MB],
+		CASE WHEN mf.[is_percent_growth] = 1
+			THEN mf.[size] * (mf.[growth] / 100.0)
+			ELSE mf.[growth]
 		END	/ 128.0										AS	[growth_MB],
-		FILEPROPERTY(MF.name, ''spaceused'') / 128.0	AS	[used_MB],
-		CASE WHEN MF.max_size = -1
+		FILEPROPERTY(mf.name, ''spaceused'') / 128.0	AS	[used_MB],
+		CASE WHEN mf.max_size = -1
 			 THEN 0
-			 ELSE MF.max_size / 128.0
+			 ELSE mf.max_size / 128.0
 		END												AS	[max_size],
-		MF.[is_percent_growth],
-		CASE WHEN MF.[is_percent_growth] = 1
-			 THEN MF.[growth]
-			 ELSE 0
-		END												AS	[percent_growth]
-FROM	sys.databases AS D INNER JOIN sys.master_files AS MF
-		ON	(D.database_id = MF.database_id) LEFT JOIN sys.server_principals AS SP
-		ON	(D.owner_sid = SP.sid)
-WHERE	D.database_id = DB_ID();';
+		mf.[is_percent_growth]
+FROM	sys.databases AS d INNER JOIN sys.master_files AS mf
+		ON	(d.database_id = mf.database_id)
+WHERE	d.database_id = DB_ID();';
 
-SELECT	*
-FROM	@Result AS R;
+SELECT	r.database_id,
+        r.database_name,
+        r.file_id,
+        r.logical_name,
+        r.type_desc,
+        r.physical_name,
+        r.size_MB,
+        r.growth_MB,
+        r.used_MB,
+		r.used_MB / r.size_MB	AS	filled_percentage,
+        r.max_size,
+        r.is_percent_growth
+FROM	@result AS r
+ORDER BY
+		r.database_name,
+		r.type_desc DESC,
+		r.file_id;
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 GO

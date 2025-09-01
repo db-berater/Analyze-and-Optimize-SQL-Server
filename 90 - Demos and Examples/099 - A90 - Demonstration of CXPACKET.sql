@@ -145,7 +145,7 @@ GO
 CREATE INDEX nix_orders_o_custkey_o_orderdate
 ON dbo.orders (o_custkey, o_orderdate)
 INCLUDE (o_totalprice)
-WITH (SORT_IN_TEMPDB = ON, DATA_COMPRESSION = PAGE);
+WITH (SORT_IN_TEMPDB = ON, DATA_COMPRESSION = PAGE, ONLINE = ON);
 GO
 
 SET STATISTICS IO ON;
