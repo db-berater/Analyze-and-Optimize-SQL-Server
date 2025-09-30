@@ -29,7 +29,7 @@ DECLARE	@result TABLE
 (
 	database_id			SMALLINT		NOT NULL,
 	database_name		sysname			NOT NULL,
-	file_id				SMALLINT		NOT NULL,
+	file_id				INT				NOT NULL,
 	logical_name		sysname			NOT NULL,
 	type_desc			VARCHAR(10)		NOT NULL,
 	physical_name		VARCHAR(255)	NOT NULL,
