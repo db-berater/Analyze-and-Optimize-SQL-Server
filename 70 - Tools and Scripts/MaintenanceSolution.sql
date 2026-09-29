@@ -19,6 +19,15 @@ https://ola.hallengren.com
 
 */
 
+IF DB_ID('MaintenanceDB') IS NULL
+BEGIN
+    CREATE DATABASE MaintenanceDB;
+    ALTER DATABASE MaintenanceDB SET RECOVERY SIMPLE;
+    ALTER AUTHORIZATION ON DATABASE::MaintenanceDB TO sa;
+END
+GO
+
+
 USE MaintenanceDB; -- Specify the database in which the objects will be created.
 
 SET NOCOUNT ON

@@ -24,7 +24,7 @@
 	TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 	PARTICULAR PURPOSE.
 ============================================================================*/
-USE [CustomerOrders];
+USE [ERP_Demo];
 GO
 
 
@@ -50,7 +50,7 @@ DECLARE @I INT = 1;
 DECLARE @STMT NVARCHAR(1000);
 WHILE @I <= 100
 BEGIN
-	SET @STMT = N'SELECT * FROM dbo.Customers WHERE Id = ' + CAST(@I AS NVARCHAR(5)) + ';'
+	SET @STMT = N'SELECT * FROM dbo.customers WHERE c_custkey = ' + CAST(@I AS NVARCHAR(5)) + ';'
 	EXEC (@STMT);
 
 	SET @I += 1;
@@ -88,7 +88,7 @@ DECLARE @I INT = 1;
 DECLARE @STMT NVARCHAR(1000);
 WHILE @I <= 100
 BEGIN
-	SET @STMT = N'SELECT * FROM dbo.Customers WHERE Id = ' + CAST(@I AS NVARCHAR(5)) + ';'
+	SET @STMT = N'SELECT * FROM dbo.customers WHERE c_custkey = ' + CAST(@I AS NVARCHAR(5)) + ';'
 	EXEC (@STMT);
 
 	SET @I += 1;
@@ -114,7 +114,7 @@ DECLARE @I INT = 1;
 DECLARE @STMT NVARCHAR(1000);
 WHILE @I <= 100
 BEGIN
-	SET @STMT = N'SELECT * FROM dbo.Customers WHERE Id = ' + CAST(@I AS NVARCHAR(5)) + ';'
+	SET @STMT = N'SELECT * FROM dbo.customers WHERE c_custkey = ' + CAST(@I AS NVARCHAR(5)) + ';'
 	EXEC (@STMT);
 
 	SET @I += 10;
@@ -144,10 +144,10 @@ GO
 
 -- Now run 100 queries with different customer ids
 DECLARE @I INT = 1;
-DECLARE @STMT NVARCHAR(1000) = N'SELECT * FROM dbo.Customers WHERE Id = @ID;';
+DECLARE @STMT NVARCHAR(1000) = N'SELECT * FROM dbo.customers WHERE c_custkey = @ID;';
 WHILE @I <= 100
 BEGIN
-	EXEC sp_executesql @STMT, N'@ID INT', @I;
+	EXEC sp_executesql @STMT, N'@ID BIGINT', @I;
 	SET @I += 1;
 END
 GO

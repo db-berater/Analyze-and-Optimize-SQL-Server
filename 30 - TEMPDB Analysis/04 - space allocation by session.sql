@@ -53,8 +53,8 @@ SELECT	S.session_id,
 FROM	sys.dm_exec_sessions AS S INNER JOIN TaskAllocation AS TA
 		ON (S.session_id = TA.session_id) LEFT JOIN sys.dm_exec_requests AS DER
 		ON (S.session_id = DER.session_id )
-		CROSS APPLY sys.dm_exec_sql_text ( DER.sql_handle ) AS DEST
-		CROSS APPLY sys.dm_exec_query_plan ( DER.plan_handle ) AS DEQP
+		OUTER APPLY sys.dm_exec_sql_text ( DER.sql_handle ) AS DEST
+		OUTER APPLY sys.dm_exec_query_plan ( DER.plan_handle ) AS DEQP
 WHERE	s.is_user_process = 1
-		AND s.status <> N'SLEEPING'
+		--AND s.status <> N'SLEEPING'
 		AND s.session_id <> @@SPID;

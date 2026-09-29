@@ -48,7 +48,7 @@ SELECT	servicename								AS	[SQL Server Service],
 		last_startup_time						AS	[last startup],
 		service_account							AS	[Service Account],
 		[filename]								AS	[start command]
-FROM	sys.dm_server_services WITH (NOLOCK);
+FROM		sys.dm_server_services WITH (NOLOCK);
 GO
 
 /* What CPU model is used for your SQL Server */
@@ -62,7 +62,7 @@ IF CAST(SERVERPROPERTY('ProductMajorVersion') AS INT) < 16
 			CAST(DOSI.committed_kb / POWER(1024.0, 2) AS NUMERIC(10, 2))		AS	CommittedMem_GB,
 			CAST(DOSI.committed_target_kb / POWER(1024.0, 2) AS NUMERIC(10, 2))	AS	CommittedTargetMem_GB,
 			DOSI.max_workers_count
-	FROM	sys.dm_os_sys_info AS DOSI;
+	FROM		sys.dm_os_sys_info AS DOSI;
 ELSE
 	SELECT	cpu_count										AS [Logical CPU Count],
 			scheduler_count,
@@ -73,7 +73,7 @@ ELSE
 			CAST(physical_memory_kb / POWER(1024.0, 2)		AS NUMERIC(10, 2))	AS	PhysicalMem_GB,
 			max_workers_count								AS [Max Workers Count], 
 			affinity_type_desc								AS [Affinity Type], 
-			sqlserver_start_time							AS [SQL Server Start Time],
+			sqlserver_start_time								AS [SQL Server Start Time],
 			DATEDIFF(hour, sqlserver_start_time, GETDATE())	AS [SQL Server Up Time (hrs)],
 			virtual_machine_type_desc						AS [Virtual Machine Type], 
 			softnuma_configuration_desc						AS [Soft NUMA Configuration], 
@@ -83,6 +83,6 @@ ELSE
 GO
 
 -- Are there any mdmp-files for further investigation?
-SELECT [filename], creation_time, size_in_bytes
-FROM sys.dm_server_memory_dumps;
+SELECT	[filename], creation_time, size_in_bytes
+FROM		sys.dm_server_memory_dumps;
 GO
